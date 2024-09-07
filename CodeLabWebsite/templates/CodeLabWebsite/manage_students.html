@@ -1,0 +1,34 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+{% load static %}  {# Load static files #}
+
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+    <h4>Manage Students for {{ course.title }}</h4>  {# Display the course title #}
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th>Student Name</th>  {# Table header for student name #}
+                <th>Actions</th>  {# Table header for actions #}
+            </tr>
+        </thead>
+        <tbody>
+            {% for enrollment in enrollments %}  {# Loop through enrollments #}
+            <tr>
+                <td>{{ enrollment.student.name }}</td>  {# Display student name #}
+                <td>
+                    {% if enrollment.blocked %}  {# Check if the student is blocked #}
+                        <a href="{% url 'unblock_student' course.id enrollment.student.id %}" class="button">Unblock</a>  {# Unblock button #}
+                    {% else %}
+                        <a href="{% url 'block_student' course.id enrollment.student.id %}" class="button">Block</a>  {# Block button #}
+                    {% endif %}
+                    <form action="{% url 'remove_student' course.id enrollment.student.id %}" method="post" style="display:inline;">  {# Form to remove student #}
+                        {% csrf_token %}  {# CSRF token for security #}
+                        <button type="submit" class="button" onclick="return confirm('Are you sure you want to remove this student?');">Remove</button>  {# Remove button with confirmation #}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

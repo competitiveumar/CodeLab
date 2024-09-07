@@ -1,0 +1,79 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <h4 style="text-align: center; font-weight: bolder; color: #333;">Register</h4>  {# Registration heading #}
+    <form method="POST">  {# Registration form #}
+        {% csrf_token %}  {# CSRF token for security #}
+        {% if form.errors %}  {# Check if there are form errors #}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}  {# Loop through form fields #}
+                        {% for error in field.errors %}  {# Loop through field errors #}
+                            <li>{{ error }}</li>  {# Display field error #}
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}  {# Loop through non-field errors #}
+                        <li>{{ error }}</li>  {# Display non-field error #}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="color: #0073b1;">{{ form.teacher.label }}</label>  {# Teacher label #}
+            {{ form.teacher }}  {# Teacher input field #}
+            <small class="form-text text-muted">{{ form.teacher.help_text }}</small>  {# Teacher help text #}
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="color: #0073b1;">{{ form.student.label }}</label>  {# Student label #}
+            {{ form.student }}  {# Student input field #}
+            <small class="form-text text-muted">{{ form.student.help_text }}</small>  {# Student help text #}
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="color: #0073b1;">{{ form.name.label }}</label>  {# Name label #}
+            {{ form.name }}  {# Name input field #}
+            <small class="form-text text-muted">{{ form.name.help_text }}</small>  {# Name help text #}
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="color: #0073b1;">{{ form.username.label }}</label>  {# Username label #}
+            {{ form.username }}  {# Username input field #}
+            <small class="form-text text-muted">{{ form.username.help_text }}</small>  {# Username help text #}
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="color: #0073b1;">{{ form.email.label }}</label>  {# Email label #}
+            {{ form.email }}  {# Email input field #}
+            <small class="form-text text-muted">{{ form.email.help_text }}</small>  {# Email help text #}
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="color: #0073b1;">{{ form.password1.label }}</label>  {# Password1 label #}
+            {{ form.password1 }}  {# Password1 input field #}
+            <small class="form-text text-muted">{{ form.password1.help_text }}</small>  {# Password1 help text #}
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="color: #0073b1;">{{ form.password2.label }}</label>  {# Password2 label #}
+            {{ form.password2 }}  {# Password2 input field #}
+            <small class="form-text text-muted">{{ form.password2.help_text }}</small>  {# Password2 help text #}
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; background-color: #0073b1; border: none; padding: 10px; font-size: 16px;">Register</button>  {# Submit button #}
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const teacherCheckbox = document.querySelector('input[name="teacher"]');  {# Teacher checkbox #}
+        const studentCheckbox = document.querySelector('input[name="student"]');  {# Student checkbox #}
+
+        teacherCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                studentCheckbox.checked = false;  {# Uncheck student checkbox if teacher is checked #}
+            }
+        });
+
+        studentCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                teacherCheckbox.checked = false;  {# Uncheck teacher checkbox if student is checked #}
+            }
+        });
+    });
+</script>
+{% endblock %}

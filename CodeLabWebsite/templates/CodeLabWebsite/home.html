@@ -1,0 +1,138 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+{% load static %}  {# Load static files #}
+
+{% block background_image %}
+background: url("{% static 'images/Homebackground.png' %}") no-repeat center center fixed;  {# Set background image #}
+background-size: cover;  {# Cover the entire background #}
+{% endblock %}
+
+{% block content %}
+<div class="row" style="height: calc(100vh - 120px); display: flex; align-items: center; justify-content: center;">
+    <div class="twelve columns" style="text-align: center;">
+        <h2 style="font-weight: bolder; font-size: 60px; color: black; padding:20px; margin-bottom: 1px">Explore Beyond Boundaries</h2>  {# Main heading #}
+        <p style="font-size: 23px; font-weight: bolder; color:black;">Discover our diverse selection of courses crafted to make your learning journey efficient and engaging.</p>  {# Subheading #}
+
+        {% if not user.is_authenticated %}
+        <div class="button-container">
+            <a href="{% url 'register' %}" class="button button-primary" style="font-size:18px;">Register</a>  {# Register button #}
+            <a href="{% url 'login' %}" class="button button-primary" style="font-size:18px;">Log In</a>  {# Log In button #}
+        </div>
+        {% else %}
+        <form id="status-form" method="post" action="{% url 'update_status' %}">
+            {% csrf_token %}
+            <div class="status-container">
+                <label for="current_status" class="current-status-label" style="font-size: 20px;">Current Status:</label>  {# Current status label #}
+                <input type="text" id="current_status" name="current_status" class="current-status" style="font-size: 20px;" value="" readonly>  {# Current status input #}
+            </div>
+            <div class="like-dislike-container" style="margin-top: 20px;">
+                <button id="like-button" class="button button-primary" style="font-size:18px; position: relative; bottom: 20px; padding: 10px 2px 1px 2px;">👍 <span id="like-count">{{ user.profile.like_count }}</span></button>  {# Like button #}
+                <button id="dislike-button" class="button button-primary" style="font-size:18px; position: relative; bottom: 20px; padding: 10px 2px 1px 2px;">👎 <span id="dislike-count">{{ user.profile.dislike_count }}</span></button>  {# Dislike button #}
+                <button id="reset-button" class="button button-primary" style="font-size:18px; position: relative; bottom: 20px; padding: 10px 2px 1px 2px;">Reset</button>  {# Reset button #}
+            </div>
+            <div>
+                <label for="new_status" style="font-size: 20px;">Update Status:</label>  {# Update status label #}
+                <input type="text" id="new_status" name="new_status" placeholder="Enter new status" style="font-size: 20px;">  {# New status input #}
+            </div>
+            <button type="submit" id="update_status_button" class="button button-primary" style="font-size:18px;">Update Status</button>  {# Update status button #}
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.getElementById('status-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const newStatus = formData.get('new_status');
+    fetch(form.action, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'update_status', new_status: newStatus, profile_id: {{ user.profile.id }} }),
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('current_status').value = data.new_status;
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+document.getElementById('like-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    fetch("{% url 'update_status' %}", {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ action: 'like', profile_id: {{ user.profile.id }} })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('like-count').textContent = data.like_count;
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+document.getElementById('dislike-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    fetch("{% url 'update_status' %}", {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ action: 'dislike', profile_id: {{ user.profile.id }} })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('dislike-count').textContent = data.dislike_count;
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+document.getElementById('reset-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    fetch("{% url 'update_status' %}", {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ action: 'reset', profile_id: {{ user.profile.id }} })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('like-count').textContent = data.like_count;
+            document.getElementById('dislike-count').textContent = data.dislike_count;
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+
+{% endblock %}
+
+{% block is_home %}true{% endblock %}

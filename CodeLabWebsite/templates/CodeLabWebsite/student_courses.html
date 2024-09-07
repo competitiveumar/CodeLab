@@ -1,0 +1,70 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+{% load static %}  {# Load static files #}
+
+{% block content %}
+<style>
+    .button {
+        font-size: 10px;  {# Set font size for buttons #}
+        padding: 10px 20px;  {# Add padding to buttons #}
+        text-align: center;  {# Center align text in buttons #}
+        border-radius: 3px;  {# Add border radius to buttons #}
+    }
+
+    .button:hover {
+        background-color: grey;  {# Change background color on hover #}
+    }    
+</style>
+
+<div class="container" style="margin-top: 20px;">
+    <h2>All Courses</h2>  {# Heading for all courses #}
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th>Course Name</th>  {# Table header for course name #}
+                <th>Description</th>  {# Table header for description #}
+                <th>Enrolled Students</th>  {# Table header for enrolled students #}
+                <th>Teacher</th>  {# Table header for teacher #}
+                <th>Teacher Photo</th>  {# Table header for teacher photo #}
+                <th>Actions</th>  {# Table header for actions #}
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}  {# Loop through courses #}
+            <tr>
+                <td>{{ course.title }}</td>  {# Display course title #}
+                <td>{{ course.description }}</td>  {# Display course description #}
+                <td>{{ course.enrolled_students.count }}</td>  {# Display count of enrolled students #}
+                <td>
+                    {% if course.teacher %}
+                        {{ course.teacher.name }}  {# Display teacher name if assigned #}
+                    {% else %}
+                        No teacher assigned  {# Display message if no teacher assigned #}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if course.teacher and course.teacher.photo %}
+                        <img src="{{ course.teacher.photo.url }}" alt="{{ course.teacher.name }}" style="width: 50px; height: 50px; border-radius: 50%;">  {# Display teacher photo if available #}
+                    {% else %}
+                        <img src="{% static 'images/default_profile.jpg' %}" alt="Default Teacher Photo" style="width: 50px; height: 50px; border-radius: 50%;">  {# Display default photo if no teacher photo available #}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if course.id in enrolled_course_ids %}
+                        <form action="{% url 'leave_course' course.id %}" method="post" style="display: inline;">  {# Form to leave course #}
+                            {% csrf_token %}  {# CSRF token for security #}
+                            <button type="submit" class="button" style="font-size: 10px; padding: 10px 35px 10px 35px;">Leave</button>  {# Leave button #}
+                        </form>
+                    {% else %}
+                        <form action="{% url 'enroll_course' course.id %}" method="post" style="display: inline;">  {# Form to enroll in course #}
+                            {% csrf_token %}  {# CSRF token for security #}
+                            <button type="submit" class="button" style="font-size: 10px; padding: 10px 30px 10px 30px;">Enroll</button>  {# Enroll button #}
+                        </form>
+                    {% endif %}
+                    <a href="{% url 'course_content' course.id %}" class="button" style='padding: 10px; font-size: 10px; margin-top: 10px;'>View Content</a>  {# View content button #}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+{% load static %}  {# Load static files #}
+
+{% block content %}
+<style>
+    h2 {
+        text-align: center;  {# Center align the heading #}
+        margin-bottom: 20px;  {# Add margin to the bottom of the heading #}
+        font-size: 24px;  {# Set font size for the heading #}
+        color: #333;  {# Set color for the heading #}
+    }
+
+    .form-group {
+        margin-bottom: 20px;  {# Add margin to the bottom of form groups #}
+    }
+
+    .form-group label {
+        font-weight: bold;  {# Set font weight to bold for labels #}
+        display: block;  {# Display labels as block elements #}
+        margin-bottom: 5px;  {# Add margin to the bottom of labels #}
+    }
+
+    .form-control {
+        width: 100%;  {# Set the width of input fields to 100% #}
+        padding: 10px;  {# Add padding to input fields #}
+        border: 1px solid #ccc;  {# Set border color for input fields #}
+        border-radius: 4px;  {# Add border radius to input fields #}
+        box-sizing: border-box;  {# Include padding and border in the element's total width and height #}
+    }
+
+    .form-text {
+        color: #6c757d;  {# Set color for help text #}
+        font-size: 14px;  {# Set font size for help text #}
+    }
+
+    .button {
+        font-size: 10px;  {# Set font size for buttons #}
+        padding: 10px 20px;  {# Add padding to buttons #}
+        text-align: center;  {# Center align text in buttons #}
+        border-radius: 3px;  {# Add border radius to buttons #}
+    }
+
+    .button:hover {
+        background-color: grey;  {# Change background color on hover #}
+    }   
+
+    .text-center {
+        text-align: center;  {# Center align text #}
+    }
+
+    .img-thumbnail {
+        border-radius: 50%;  {# Make images circular #}
+        margin-bottom: 20px;  {# Add margin to the bottom of images #}
+        width: 120px;  {# Set width of images #}
+        height: 120px;  {# Set height of images #}
+        object-fit: cover;  {# Ensure images cover the area #}
+    }
+
+    .photo-field-container {
+        display: flex;  {# Use flexbox for photo field container #}
+        align-items: center;  {# Center align items vertically #}
+        gap: 10px;  {# Add gap between items #}
+    }
+
+    .photo-info {
+        display: flex;  {# Use flexbox for photo info #}
+        flex-direction: column;  {# Arrange items in a column #}
+        align-items: flex-start;  {# Align items to the start #}
+    }
+
+    .photo-preview {
+        display: flex;  {# Use flexbox for photo preview #}
+        align-items: center;  {# Center align items vertically #}
+        gap: 10px;  {# Add gap between items #}
+    }
+
+    .form-actions {
+        display: flex;  {# Use flexbox for form actions #}
+        justify-content: space-between;  {# Distribute space between items #}
+        align-items: center;  {# Center align items vertically #}
+        margin-top: 20px;  {# Add margin to the top #}
+    }
+
+    .form-actions .button {
+        flex: 1;  {# Allow buttons to grow and shrink as needed #}
+        margin: 0 5px;  {# Add margin to the sides of buttons #}
+    }
+
+    /* Hide the file input */
+    #id_photo {
+        display: none;  {# Hide the file input #}
+    }
+
+    /* Style for the file name display */
+    .file-name {
+        margin-left: 10px;  {# Add margin to the left of file name #}
+        font-size: 14px;  {# Set font size for file name #}
+        color: #333;  {# Set color for file name #}
+    }
+</style>
+
+<div class="container" style="margin-top: 20px;">
+    <h2>Edit Your Profile</h2>  {# Heading for editing profile #}
+    <form method="post" enctype="multipart/form-data">  {# Form for editing profile with file upload support #}
+        {% csrf_token %}  {# CSRF token for security #}
+        {{ form.non_field_errors }}  {# Display non-field errors #}
+        {% for field in form.visible_fields %}  {# Loop through visible fields #}
+        {% if field.name != 'delete_photo' %}  {# Skip delete_photo field #}
+        <div class="form-group">
+            {{ field.label_tag }}  {# Display field label #}
+            <div class="photo-field-container">
+                {% if field.name == 'photo' %}  {# Check if field is photo #}
+                <div class="photo-preview">
+                    {% if field.value %}  {# Check if photo has a value #}
+                    <img src="{{ field.value.url }}" alt="Profile Image" class="img-thumbnail">  {# Display profile image #}
+                    {% endif %}
+                    <button type="button" class="button" onclick="document.getElementById('id_photo').click();">Select Image</button>  {# Button to select image #}
+                    <button type="button" class="button" onclick="removeSelectedImage();">Remove Image</button>  {# Button to remove image #}
+                    <span id="file-name" class="file-name">{{ field.value.name }}</span>  {# Display file name #}
+                </div>
+                {{ field }}  {# Display field #}
+                {% else %}
+                {{ field }}  {# Display field #}
+                {% endif %}
+            </div>
+            {% if field.help_text %}  {# Check if field has help text #}
+            <small class="form-text">{{ field.help_text }}</small>  {# Display help text #}
+            {% endif %}
+            {{ field.errors }}  {# Display field errors #}
+        </div>
+        {% endif %}
+        {% endfor %}
+        <input type="hidden" id="remove_image" name="remove_image" value="False">  {# Hidden input to track image removal #}
+        <div class="form-actions">
+            <button type="submit" class="button">Save Changes</button>  {# Submit button to save changes #}
+            <a href="{% url 'teacher_dashboard' %}" class="button">Cancel</a>  {# Cancel button to go back to the teacher dashboard #}
+        </div>
+    </form>
+</div>
+
+<script>
+    function removeSelectedImage() {
+        const fileInput = document.getElementById('id_photo');  {# Get file input element #}
+        const fileNameDisplay = document.getElementById('file-name');  {# Get file name display element #}
+        const removeImageInput = document.getElementById('remove_image');  {# Get remove image input element #}
+
+        fileInput.value = '';  {# Clear file input value #}
+        fileNameDisplay.textContent = '';  {# Clear file name display #}
+        removeImageInput.value = 'True';  {# Set remove image input value to True #}
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('id_photo');  {# Get file input element #}
+        const fileNameDisplay = document.getElementById('file-name');  {# Get file name display element #}
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;  {# Display selected file name #}
+            } else {
+                fileNameDisplay.textContent = '';  {# Clear file name display if no file selected #}
+            }
+        });
+    });
+</script>
+{% endblock %}

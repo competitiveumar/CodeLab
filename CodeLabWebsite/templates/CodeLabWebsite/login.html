@@ -1,0 +1,85 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+
+{% block content %}
+<style>
+    .row {
+        width: 100%;  {# Set the width of the row to 100% #}
+    }
+
+    .six.columns.offset-by-three {
+        background-color: white;  {# Set background color to white #}
+        padding: 30px;  {# Add padding around the content #}
+        border-radius: 8px;  {# Add rounded corners #}
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  {# Add a subtle shadow #}
+    }
+
+    h4 {
+        text-align: center;  {# Center align the heading #}
+        margin-bottom: 20px;  {# Add margin to the bottom of the heading #}
+        color: #343a40;  {# Set the color of the heading #}
+    }
+
+    label {
+        display: block;  {# Display labels as block elements #}
+        margin-bottom: 5px;  {# Add margin to the bottom of the labels #}
+        color: #495057;  {# Set the color of the labels #}
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;  {# Set the width of the input fields to 100% #}
+        padding: 10px;  {# Add padding inside the input fields #}
+        margin-bottom: 15px;  {# Add margin to the bottom of the input fields #}
+        border: 1px solid #ced4da;  {# Set the border color of the input fields #}
+        border-radius: 4px;  {# Add rounded corners to the input fields #}
+    }
+
+    .button-primary {
+        background-color: #0275d8;  {# Set the background color of the button #}
+        color: white;  {# Set the text color of the button #}
+        font-size: 14px;  {# Set the font size of the button #}
+        padding: 15px 25px;  {# Add padding inside the button #}
+        text-align: center;  {# Center align the text inside the button #}
+        border-radius: 3px;  {# Add rounded corners to the button #}
+        width: 100%;  {# Set the width of the button to 100% #}
+        border: none;  {# Remove the border of the button #}
+        cursor: pointer;  {# Change the cursor to pointer on hover #}
+    }
+
+    .button-primary:hover {
+        background-color: #025aa5;  {# Set the background color of the button on hover #}
+    }
+
+    p {
+        text-align: center;  {# Center align the paragraph #}
+        margin-top: 20px;  {# Add margin to the top of the paragraph #}
+    }
+
+    a {
+        color: #0275d8;  {# Set the color of the links #}
+        text-decoration: none;  {# Remove the underline from the links #}
+    }
+
+    a:hover {
+        text-decoration: underline;  {# Add underline to the links on hover #}
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="six columns offset-by-three">
+            <h4>Login</h4>  {# Login heading #}
+            <form method="post">  {# Login form #}
+                {% csrf_token %}  {# CSRF token for security #}
+                <label for="id_username">Username</label>  {# Username label #}
+                <input type="text" id="id_username" name="username" class="u-full-width" required>  {# Username input field #}
+
+                <label for="id_password">Password</label>  {# Password label #}
+                <input type="password" id="id_password" name="password" class="u-full-width" required>  {# Password input field #}
+
+                <button type="submit" class="button-primary">Log in</button>  {# Submit button #}
+            </form>
+            <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>  {# Registration link #}
+        </div>
+    </div>
+</div>
+{% endblock %}

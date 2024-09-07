@@ -1,0 +1,68 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+
+{% block content %}
+<style>
+    h2 {
+        text-align: center;  {# Center align the heading #}
+        color: #333;  {# Set the color of the heading #}
+        margin-bottom: 20px;  {# Add margin to the bottom of the heading #}
+    }
+
+    table {
+        width: 100%;  {# Set the width of the table to 100% #}
+        border-collapse: collapse;  {# Collapse table borders #}
+        margin-bottom: 20px;  {# Add margin to the bottom of the table #}
+    }
+
+    table th, table td {
+        padding: 12px;  {# Add padding to table cells #}
+        border: 1px solid #ddd;  {# Add border to table cells #}
+        text-align: center;  {# Center align text in table cells #}
+    }
+
+    table th {
+        background-color: #f2f2f2;  {# Set background color for table headers #}
+        color: #333;  {# Set text color for table headers #}
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f9f9f9;  {# Set background color for even rows #}
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;  {# Change background color on hover #}
+    }
+
+    .no-feedback {
+        text-align: center;  {# Center align the text #}
+        color: #777;  {# Set the color of the text #}
+        font-size: 16px;  {# Set the font size of the text #}
+    }
+</style>
+
+<div class="container" style="margin-top: 20px;">
+    <h2>Feedback for {{ course.title }}</h2>  {# Display the course title #}
+    {% if feedbacks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>  {# Table header for student name #}
+                    <th>Feedback</th>  {# Table header for feedback text #}
+                    <th>Rating (out of 5)</th>  {# Table header for rating #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in feedbacks %}  {# Loop through feedbacks #}
+                <tr>
+                    <td>{{ feedback.student.user.username }}</td>  {# Display student username #}
+                    <td>{{ feedback.text }}</td>  {# Display feedback text #}
+                    <td>{{ feedback.rating }}</td>  {# Display feedback rating #}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-feedback">No feedback available for this course.</p>  {# Message if no feedback is available #}
+    {% endif %}
+</div>
+{% endblock %}

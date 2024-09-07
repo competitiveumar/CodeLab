@@ -1,0 +1,135 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+{% load static %}  {# Load static files #}
+
+{% block content %}
+<style>
+    .button {
+        font-size: 10px;  {# Set font size for buttons #}
+        padding: 10px 20px;  {# Add padding to buttons #}
+        text-align: center;  {# Center align text in buttons #}
+        border-radius: 3px;  {# Add border radius to buttons #}
+    }
+
+    .button:hover {
+        background-color: grey;  {# Change background color on hover #}
+    }
+
+    table {
+        width: 100%;  {# Set table width to 100% #}
+        border-collapse: collapse;  {# Collapse table borders #}
+    }
+
+    th, td {
+        padding: 10px;  {# Add padding to table cells #}
+        text-align: center;  {# Center align text in table cells #}
+        vertical-align: middle;  {# Vertically center align content in table cells #}
+    }
+
+    th {
+        background-color: #f2f2f2;  {# Set background color for table headers #}
+    }
+
+    td img {
+        display: block;  {# Display images as block elements #}
+        margin: 0 auto;  {# Center align images #}
+    }
+
+    .alert {
+        padding: 15px;  {# Add padding to alert boxes #}
+        background-color: #f44336;  {# Set background color for alert boxes #}
+        color: white;  {# Set text color for alert boxes #}
+        margin-bottom: 20px;  {# Add margin to the bottom of alert boxes #}
+        text-align: center;  {# Center align text in alert boxes #}
+    }
+
+    .alert.success {
+        background-color: #4CAF50;  {# Set background color for success alerts #}
+    }
+
+    .alert.info {
+        background-color: #2196F3;  {# Set background color for info alerts #}
+    }
+
+    .alert.warning {
+        background-color: #ff9800;  {# Set background color for warning alerts #}
+    }
+</style>
+
+<div class="container" style="margin-bottom: 20px; margin-top: 20px;">
+    {% if messages %}
+    <div id="notification" class="alert">
+        {% for message in messages %}
+            {{ message }}  {# Display each message #}
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if new_material_alert %}
+        <div id="new-material-alert" class="alert info">New course material added by the teacher.</div>  {# Display new material alert #}
+    {% endif %}
+    <h4>Student Dashboard</h4>  {# Dashboard heading #}
+    <p>Welcome to your dashboard! Here you can find your enrolled courses, upcoming deadlines, and more.</p>  {# Dashboard welcome message #}
+    <h2>Enrolled Courses</h2>  {# Enrolled courses heading #}
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th>Course Image</th>  {# Table header for course image #}
+                <th>Course Name</th>  {# Table header for course name #}
+                <th>Description</th>  {# Table header for course description #}
+                <th>Enrolled Students</th>  {# Table header for enrolled students #}
+                <th>Teacher</th>  {# Table header for teacher name #}
+                <th>Teacher Photo</th>  {# Table header for teacher photo #}
+                <th>Actions</th>  {# Table header for actions #}
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in enrolled_courses %}  {# Loop through enrolled courses #}
+            <tr>
+                <td>
+                    {% if item.course.course_image %}
+                        <img src="{{ item.course.course_image.url }}" alt="{{ item.course.title }}" style="width: 50px; height: 50px; border-radius: 5px;">  {# Display course image if available #}
+                    {% endif %}
+                </td>
+                <td>{{ item.course.title }}</td>  {# Display course title #}
+                <td>{{ item.course.description }}</td>  {# Display course description #}
+                <td>{{ item.course.enrolled_students.count }}</td>  {# Display count of enrolled students #}
+                <td>{{ item.course.teacher.name }}</td>  {# Display teacher name #}
+                <td>
+                    {% if item.course.teacher.photo %}
+                        <img src="{{ item.course.teacher.photo.url }}" alt="{{ item.course.teacher.name }}" style="width: 50px; height: 50px; border-radius: 50%;">  {# Display teacher photo if available #}
+                    {% else %}
+                        <img src="{% static 'images/default_profile.jpg' %}" alt="Default Teacher Photo" style="width: 50px; height: 50px; border-radius: 50%;">  {# Display default photo if no teacher photo available #}
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{% url 'leave_course' item.course.id %}" method="post" style="display: inline;">  {# Form to leave course #}
+                        {% csrf_token %}  {# CSRF token for security #}
+                        <button type="submit" class="button" style="padding: 10px 45px 10px 45px;">Leave</button>  {# Leave button #}
+                    </form>
+                    <a href="{% url 'course_content' item.course.id %}" class="button" style="margin-top: 5px;">View Content</a>  {# Link to view course content #}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block extra_js %}
+<script>
+    // Hide the notification after 3 seconds
+    setTimeout(function() {
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.style.display = 'none';
+        }
+    }, 3000);
+
+    // Hide the new material alert after 5 seconds
+    setTimeout(function() {
+        const newMaterialAlert = document.getElementById('new-material-alert');
+        if (newMaterialAlert) {
+            newMaterialAlert.style.display = 'none';
+        }
+    }, 5000);
+</script>
+{% endblock %}
+{% endblock %}

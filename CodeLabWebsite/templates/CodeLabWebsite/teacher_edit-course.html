@@ -1,0 +1,13 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+
+{% block content %}
+<div class="container">
+    <h2>Edit Course</h2>  {# Heading for editing a course #}
+    <form method="post" enctype="multipart/form-data">  {# Form for editing a course with file upload support #}
+        {% csrf_token %}  {# CSRF token for security #}
+        {{ form.as_p }}  {# Render the form fields as paragraphs #}
+        <button type="submit" class="button button-primary">Save Changes</button>  {# Submit button to save changes #}
+        <a href="{% url 'teacher_dashboard' %}" class="button">Cancel</a>  {# Cancel button to go back to the teacher dashboard #}
+    </form>
+</div>
+{% endblock %}

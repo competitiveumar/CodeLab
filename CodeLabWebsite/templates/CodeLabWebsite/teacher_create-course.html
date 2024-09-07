@@ -1,0 +1,28 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+    <h2 class="title">Create Course</h2>  {# Heading for creating a course #}
+    <form method="post" enctype="multipart/form-data">  {# Form for creating a course with file upload support #}
+        {% csrf_token %}  {# CSRF token for security #}
+        {{ form.non_field_errors }}  {# Display non-field errors #}
+        <div class="form-group">
+            {{ form.title.label_tag }}  {# Label for the course title #}
+            {{ form.title }}  {# Input field for the course title #}
+        </div>
+        <div class="form-group">
+            {{ form.description.label_tag }}  {# Label for the course description #}
+            {{ form.description }}  {# Input field for the course description #}
+        </div>
+        <div class="form-group">
+            {{ form.course_image.label_tag }}  {# Label for the course image #}
+            {{ form.course_image }}  {# Input field for the course image #}
+        </div>
+        <div class="form-group">
+            {{ form.materials.label_tag }}  {# Label for the course materials #}
+            {{ form.materials }}  {# Input field for the course materials #}
+        </div>
+        <button type="submit" class="button button-primary">Save Course</button>  {# Submit button to save the course #}
+    </form>
+</div>
+{% endblock %}

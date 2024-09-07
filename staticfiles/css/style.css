@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.top-bar {
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
+.top-bar .logo a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+}
+
+footer {
+    background-color: #000000;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+footer a {
+    text-decoration: none;
+    /* color: #007bff; */
+}
+
+/* Custom styles for buttons */
+.container .button-primary {
+    font-size: 2.5em; /* Significantly increase the font size */
+    padding: 1.5em 3em; /* Significantly increase the padding */
+}

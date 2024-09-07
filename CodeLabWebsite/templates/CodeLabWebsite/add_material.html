@@ -1,0 +1,12 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+
+{% block content %}  {# Define the content block #}
+<div class="container">
+    <h2>Add Material to {{ course.title }}</h2>  {# Display the course title #}
+    <form method="post" enctype="multipart/form-data">  {# Form for adding material with file upload support #}
+        {% csrf_token %}  {# CSRF token for security #}
+        {{ form.as_p }}  {# Render the form fields as paragraphs #}
+        <button type="submit" class="button">Add Material</button>  {# Submit button #}
+    </form>
+</div>
+{% endblock %}  {# End of content block #}

@@ -1,0 +1,55 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+{% load static %}  {# Load static files #}
+
+{% block content %}
+<div class="container" style="margin-top: 20px; padding: 20px; background-color: #f9f9f9; border-radius: 10px;">
+    <h2 style="text-align: center; margin-bottom: 20px;">Search Users</h2>  {# Heading for searching users #}
+    <form method="get" style="margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-end; justify-content: space-between;">  {# Search form #}
+        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+            <div style="display: flex; gap: 5px;">
+                <input type="text" name="q" placeholder="Search by name" value="{{ search_query }}" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 200px;">  {# Input field for search query #}
+                <button type="submit" style="padding: 10px 20px; border-radius: 5px; background-color: #0275d8; color: white; border: none; cursor: pointer;">Search</button>  {# Search button #}
+            </div>
+        </div>
+        <div>
+            <label for="type" style="margin-right: 10px;">Select Type:</label>  {# Label for user type selection #}
+            <select name="type" id="type" onchange="this.form.submit()" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc;">  {# Dropdown for user type selection #}
+                <option value="" {% if not request.GET.type %}selected{% endif %}>All</option>  {# Option for all users #}
+                <option value="student" {% if request.GET.type == 'student' %}selected{% endif %}>Student</option>  {# Option for students #}
+                <option value="teacher" {% if request.GET.type == 'teacher' %}selected{% endif %}>Teacher</option>  {# Option for teachers #}
+            </select>
+        </div>
+    </form>
+    
+    <div class="card-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">  {# Container for user cards #}
+        {% for profile in profiles %}  {# Loop through profiles #}
+        <div class="card" style="border: 1px solid #ddd; border-radius: 10px; padding: 20px; width: 250px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.2s, box-shadow 0.2s;">  {# User card #}
+            {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 10px;">  {# Display profile picture if available #}
+            {% else %}
+                <img src="{% static 'images/default_profile.jpg' %}" alt="Default" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 10px;">  {# Display default profile picture if not available #}
+            {% endif %}
+            <h3 style="margin-bottom: 10px;">{{ profile.name }}</h3>  {# Display full name #}
+            <p style="margin-bottom: 10px;">{{ profile.status }}</p>  {# Display status #}
+            <p style="margin-bottom: 20px;">{% if profile.teacher %}Teacher{% else %}Student{% endif %}</p>  {# Display user type #}
+            <a href="{% url 'user_profile' profile.user.id %}" class="button" style="padding: 10px 20px; border-radius: 5px; background-color: #0275d8; color: white; text-decoration: none; cursor: pointer;">View Profile</a>  {# Link to view profile #}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-10px);  {# Move card up on hover #}
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);  {# Add shadow on hover #}
+    }
+    .button:hover {
+        background-color: #025aa5;  {# Change button color on hover #}
+    }
+    .card h3 {
+        font-size: 20px;  {# Set font size for card heading #}
+        font-family: calibri;  {# Set font family for card heading #}
+        font-weight: bolder;  {# Set font weight for card heading #}
+    }
+</style>
+{% endblock %}

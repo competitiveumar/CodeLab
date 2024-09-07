@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            {% block background_image %}
+            background: none; /* Default background */
+            {% endblock %}
+            color: #036;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+            position: relative; /* Ensure the pseudo-element is positioned correctly */
+            overflow-x: hidden; /* Prevent horizontal overflow */
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.5); /* White overlay with 50% opacity */
+            z-index: 0; /* Ensure the overlay is behind the content */
+        }
+        header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative; /* Ensure header content is above the overlay */
+            z-index: 1;
+        }
+        header h1 {
+            margin: 0; /* Remove default margin */
+            padding: 0 10px; /* Add some padding on the sides */
+            font-size: 24px; /* Smaller font size */
+        }
+        header form {
+            margin: 0; /* Removes margin */
+            height: 40px; /* Matches the height of the other buttons */
+        }
+
+        header form button {
+            cursor: pointer; /* Changes cursor to pointer on hover over the button */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+        footer {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 2rem 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            z-index: 1; /* Ensure footer content is above the overlay */
+        }
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%; /* Ensure the footer container takes full width */
+            max-width: 1200px;
+            margin: auto;
+        }
+        .footer-left {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            margin-right: 10px; /* Reduce the margin to bring the elements closer */
+        }
+        .footer-right {
+            flex: 1;
+            text-align: right;
+            margin-left: 10px; /* Reduce the margin to bring the elements closer */
+            white-space: nowrap; /* Ensure the text stays on one line */
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px; 
+            margin: auto;
+            overflow: hidden;
+            position: relative; /* Ensure content is positioned relative to the container */
+            z-index: 1; /* Ensure content is in front of the background */
+        }
+    
+        .button-primary, .button {
+            background-color: #0073b1; /* LinkedIn blue */
+            color: white;
+            border: none;
+            padding: 30px 60px;
+            margin: 0 5px; /* Small space between buttons */
+            border-radius: 10px; /* Slightly rounded corners for a modern look */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+            display: inline-flex; /* Use flexbox for alignment */
+            align-items: center; /* Align items vertically in the center */
+            justify-content: center; /* Center content horizontally */
+            height: 40px; /* Define a fixed height */
+            font-size: 20px; /* Adjust the font size as needed */
+        }
+
+        .header-button {
+            padding: 10px 20px; /* Smaller padding for header buttons */
+            font-size: 16px; /* Smaller font size for header buttons */
+            height: 30px; /* Smaller height for header buttons */
+        }
+
+        form button {
+            background-color: #0073b1; 
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px; /* Small space between buttons */
+            border-radius: 2px; /* Slightly rounded corners for a modern look */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+            display: inline-flex; /* Use flexbox for alignment */
+            align-items: center; /* Align items vertically in the center */
+            justify-content: center; /* Center content horizontally */
+            height: 40px; /* Define a fixed height */
+        }
+    
+        .button-primary:hover, .button:hover {
+            background-color: #005682; /* Darker shade of blue for hover effect */
+        }
+    
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+    
+        .user-greeting {
+            margin-left: 20px;
+            color: white;
+            margin-left: 10px; /* Add space between the button and the greeting text */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+
+        .social-media-icons {
+            display: flex;
+            justify-content: center; /* Center the icons horizontally */
+            align-items: center; /* Center the icons vertically */
+            margin-left: 500px; /* Add margin to the right of the icons */
+        }
+
+        .social-media-icons a {
+            margin: 0 10px; /* Add space between icons */
+            font-size: 24px; /* Increase icon size */
+            text-decoration: none; /* Remove underline from links */
+        }
+
+        .social-media-icons img {
+            height: 28px; /* Set the height of the image */
+            width: auto; /* Maintain aspect ratio */
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            header h1 {
+                font-size: 20px;
+                padding: 0;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .footer-right {
+                margin-left: 0;
+                text-align: left;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .button-primary, .button {
+                font-size: 16px;
+                padding: 20px 40px;
+            }
+            .footer-container {
+                width: 90%;
+            }
+        }
+
+        .button {
+            font-size: 10px;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 3px;
+        }
+    
+        .button:hover {
+            background-color: grey;
+        } 
+
+        /* Chat Box Styles */
+        #chat-box {
+            position: fixed; /* Ensure the chat box is fixed in position */
+            bottom: 20px; /* Add some space from the bottom */
+            right: 20px; /* Add some space from the right */
+            width: 70px; /* Width of the icon */
+            height: 70px; /* Height of the icon */
+            border: none; /* Remove border */
+            background: none; /* Remove background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: width 0.3s ease, height 0.3s ease;
+            z-index: 1000; /* Ensure the chat box is above other content */
+        }
+        
+        #chat-box.expanded {
+            width: 300px; /* Expanded width */
+            height: 400px; /* Expanded height */
+            border: 1px solid #ccc; /* Add border when expanded */
+            background: #fff; /* Add background when expanded */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow when expanded */
+        }
+        
+        #chat-icon {
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            border-radius: 50%; /* Make the icon circular */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for visual appeal */
+            transition: transform 0.3s ease; /* Smooth transform on hover */
+        }
+        
+        #chat-icon:hover {
+            transform: scale(1.1); /* Slightly enlarge the icon on hover */
+        }
+        
+        #chat-content {
+            display: none; /* Hidden by default */
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+        }
+        
+        #chat-box.expanded #chat-content {
+            display: flex; /* Show when expanded */
+        }
+        
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        #chat-input {
+            display: flex;
+            padding: 10px;
+        }
+        
+        #message-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        #send-button {
+            padding: 10px;
+            background: #0073b1;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-left: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #file-button, #audio-button {
+            padding: 0px;
+            background: none;
+            color: #0073b1;
+            border: none;
+            margin-left: 4px;
+            cursor: pointer;
+            font-size: 20px; /* Adjust font size for better appearance */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }   
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0px;">
+            <h1 style="margin: 0; flex-grow: 1; font-size: 24px;">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'images/CodeLab.png' %}" alt="CodeLab" style="height: 40px;">
+                </a>
+            </h1>
+            {% if user.is_authenticated %}
+                {% if user.profile.teacher %}
+                    <a href="{% url 'teacher_dashboard' %}" class="button">My Dashboard</a>
+                    <a href="{% url 'create_course' %}" class="button">Create Course</a>
+                    <a href="{% url 'search_users' %}" class="button">User Search</a>
+                    <a href="{% url 'edit_teacher_profile' %}" class="button">My Profile</a>
+
+                    <form method="post" action="{% url 'logout' %}" style="display: inline-flex; align-items: center;">
+                        {% csrf_token %}
+                        <button type="submit" class="button">Logout</button>
+                    </form>
+
+                    <span class="user-greeting">Hello teacher, {{ user.username }}</span>
+                {% else %}
+                    <a href="{% url 'student_dashboard' %}" class="button">My Dashboard</a>
+                    <a href="{% url 'all_courses' %}" class="button">All Courses</a>
+                    <a href="{% url 'edit_teacher_profile' %}" class="button">My Profile</a>
+
+                    <form method="post" action="{% url 'logout' %}" style="display: inline-flex; align-items: center;">
+                        {% csrf_token %}
+                        <button type="submit" class="button">Logout</button>
+                    </form>
+                    
+                    <span class="user-greeting">Hello student, {{ user.username }}</span>
+                {% endif %}
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% if user.is_authenticated and not home %}
+    <div id="chat-box">
+        <img id="chat-icon" src="{% static 'images/Chaticon.png' %}" alt="Chat Icon" />
+        <div id="chat-content">
+            <div id="chat-messages"></div>
+            <div id="chat-input">
+                <input type="text" id="message-input" autocomplete="off" placeholder="Type a message...">
+                <input type="file" id="file-input" style="display: none;">
+                <button id="file-button"><i class="fas fa-paperclip"></i></button>
+                <button id="audio-button"><i class="fas fa-microphone"></i></button>
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatIcon = document.getElementById('chat-icon');
+        const chatContent = document.getElementById('chat-content');
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const fileInput = document.getElementById('file-input');
+        const fileButton = document.getElementById('file-button');
+        const audioButton = document.getElementById('audio-button');
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        chatIcon.onclick = function() {
+            chatBox.classList.toggle('expanded');
+        };
+
+        fileButton.onclick = function() {
+            fileInput.click();
+        };
+
+        fileInput.onchange = function() {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                chatSocket.send(JSON.stringify({
+                    'file': e.target.result,
+                    'filename': file.name
+                }));
+            };
+            reader.readAsDataURL(file);
+        };
+
+        audioButton.onclick = async function() {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                audioButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            } else {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = function(event) {
+                    audioChunks.push(event.data);
+                };
+                mediaRecorder.onstop = function() {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        chatSocket.send(JSON.stringify({
+                            'audio': e.target.result
+                        }));
+                    };
+                    reader.readAsDataURL(audioBlob);
+                    audioChunks = [];
+                };
+                mediaRecorder.start();
+                audioButton.innerHTML = '<i class="fas fa-stop"></i>';
+            }
+        };
+
+        const roomName = 'global';  // Use a common room name
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageElement = document.createElement('div');
+            if (data.message) {
+                messageElement.textContent = `${data.sender}: ${data.message}`;
+            } else if (data.file) {
+                const link = document.createElement('a');
+                link.href = data.file;
+                link.download = data.filename;
+                link.textContent = `${data.sender} sent a file: ${data.filename}`;
+                messageElement.appendChild(link);
+            } else if (data.audio) {
+                const audio = document.createElement('audio');
+                audio.controls = true;
+                audio.src = data.audio;
+                messageElement.appendChild(audio);
+            }
+            chatMessages.appendChild(messageElement);
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        sendButton.onclick = function(e) {
+            const message = messageInput.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInput.value = '';
+        };
+
+        messageInput.onkeyup = function(e) {
+            if (e.keyCode === 13) {  // Enter key
+                sendButton.click();
+            }
+        };
+    </script>
+    {% endif %}
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="social-media-icons">
+                    <a href="https://www.facebook.com/login" role="button">
+                        <img src="{% static 'images/Facebook.png' %}" alt="Facebook">
+                    </a>
+                    <a href="https://twitter.com/login" role="button">
+                        <img src="{% static 'images/Twitter.png' %}" alt="Twitter">
+                    </a>
+                    <a href="https://accounts.google.com/signin" role="button">
+                        <img src="{% static 'images/Google.png' %}" alt="Google">
+                    </a>
+                    <a href="https://github.com/login" role="button">
+                        <img src="{% static 'images/Github.png' %}" alt="Github">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="text-white">
+                    &copy; Copyright CodeLab 2024
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

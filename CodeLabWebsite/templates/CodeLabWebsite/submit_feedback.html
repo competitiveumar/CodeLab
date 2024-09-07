@@ -1,0 +1,51 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+
+{% block content %}
+<style>
+    h2 {
+        text-align: center;  {# Center align the heading #}
+        color: #333;  {# Set the color of the heading #}
+    }
+
+    .form-group {
+        margin-bottom: 15px;  {# Add margin to the bottom of form groups #}
+    }
+
+    .form-group label {
+        display: block;  {# Display labels as block elements #}
+        margin-bottom: 5px;  {# Add margin to the bottom of labels #}
+        font-weight: bold;  {# Set font weight to bold for labels #}
+        color: #555;  {# Set the color of labels #}
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;  {# Set the width of input, select, and textarea elements to 100% #}
+        padding: 10px;  {# Add padding to input, select, and textarea elements #}
+        border: 1px solid #ccc;  {# Set the border color of input, select, and textarea elements #}
+        border-radius: 4px;  {# Add border radius to input, select, and textarea elements #}
+        box-sizing: border-box;  {# Include padding and border in the element's total width and height #}
+    }
+
+    .form-group textarea {
+        resize: vertical;  {# Allow vertical resizing of textarea elements #}
+        height: 100px;  {# Set the height of textarea elements #}
+    }
+</style>
+
+<div class="container" style="margin-top: 20px;">
+    <h2>Submit Feedback for {{ course.title }}</h2>  {# Display the course title #}
+    <form method="post">  {# Feedback form #}
+        {% csrf_token %}  {# CSRF token for security #}
+        {{ form.non_field_errors }}  {# Display non-field errors #}
+        <div class="form-group">
+            <label for="id_text">Feedback</label>  {# Feedback label #}
+            {{ form.text }}  {# Feedback input field #}
+        </div>
+        <div class="form-group">
+            <label for="id_rating">Rating (out of 5)</label>  {# Rating label #}
+            {{ form.rating }}  {# Rating input field #}
+        </div>
+        <button type="submit" class="button">Submit Feedback</button>  {# Submit button #}
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'CodeLabWebsite/base.html' %}  {# Extend the base template #}
+{% load static %}  {# Load static files #}
+
+{% block content %}  {# Define the content block #}
+<style>
+    .container {
+        margin-top: 10px;  {# Add margin to the top of the container #}
+    }
+
+    .course-header {
+        text-align: center;  {# Center align the course header #}
+        margin-bottom: 20px;  {# Add margin to the bottom of the course header #}
+    }
+
+    .course-header h2 {
+        font-size: 3rem;  {# Set font size for the course title #}
+        font-weight: bolder;  {# Set font weight for the course title #}
+        color: #343a40;  {# Set color for the course title #}
+    }
+
+    .course-header p {
+        font-size: 2rem;  {# Set font size for the description label #}
+        color: #000000;  {# Set color for the description label #}
+        text-align: left;  {# Left align the description label #}
+        font-weight: bolder;  {# Set font weight for the description label #}
+    }
+
+    .course-description {
+        font-size: 1.5rem;  {# Set font size for the course description #}
+        color: #000000;  {# Set color for the course description #}
+        text-align: left;  {# Left align the course description #}
+        position: relative;  {# Set position to relative for the course description #}
+        left: 120px;  {# Move the course description to the right #}
+        bottom: 52px;  {# Move the course description up #}
+    }
+
+    .materials-section {
+        margin-top: 30px;  {# Add margin to the top of the materials section #}
+    }
+
+    .materials-section h3 {
+        font-size: 2rem;  {# Set font size for the materials header #}
+        font-weight: bolder;  {# Set font weight for the materials header #}
+        color: #343a40;  {# Set color for the materials header #}
+        display: inline-block;  {# Display the materials header inline #}
+        margin-right: 20px;  {# Add margin to the right of the materials header #}
+    }
+
+    .download-button {
+        background-color: #007bff;  {# Set background color for the download button #}
+        color: white;  {# Set text color for the download button #}
+        text-align: center;  {# Center align the text in the download button #}
+        display: inline-block;  {# Display the download button inline #}
+        padding: 10px 20px;  {# Add padding to the download button #}
+        font-size: 1.2rem;  {# Set font size for the download button #}
+        border-radius: 3px;  {# Add border radius to the download button #}
+        text-decoration: none;  {# Remove text decoration from the download button #}
+        transition: background-color 0.3s ease;  {# Add transition effect to the download button #}
+    }
+
+    .download-button:hover {
+        background-color: #0056b3;  {# Set background color for the download button on hover #}
+    }
+
+    .feedback-button {
+        background-color: #28a745;  {# Set background color for the feedback button #}
+        color: white;  {# Set text color for the feedback button #}
+        text-align: center;  {# Center align the text in the feedback button #}
+        padding: 10px 20px;  {# Add padding to the feedback button #}
+        font-size: 1.2rem;  {# Set font size for the feedback button #}
+        border-radius: 3px;  {# Add border radius to the feedback button #}
+        text-decoration: none;  {# Remove text decoration from the feedback button #}
+        transition: background-color 0.3s ease;  {# Add transition effect to the feedback button #}
+        margin-bottom: 20px;  {# Add margin to the bottom of the feedback button #}
+        position: relative;  {# Set position to relative for the feedback button #}
+        left: 300px;  {# Move the feedback button to the right #}
+        bottom: 62px;  {# Move the feedback button up #}
+    }
+
+    .feedback-button:hover {
+        background-color: #218838;  {# Set background color for the feedback button on hover #}
+    }
+
+    .button-container {
+        display: flex;  {# Use flexbox for the button container #}
+        justify-content: flex-start;  {# Align buttons to the start #}
+        gap: 20px;  {# Add gap between buttons #}
+        margin-top: 10px;  {# Add margin to the top of the button container #}
+    }
+</style>
+
+<div class="container">
+    <div class="course-header">
+        <h2>Course Content: {{ course.title }}</h2>  {# Display the course title #}
+        <p>Description: </p> <div class="course-description">{{ course.description }}</div>  {# Display the course description #}
+    </div>
+    <div class="materials-section">
+        <h3>Materials:</h3>  {# Materials section header #}
+        {% if course.materials %}
+            <a href="{{ course.materials.url }}" download class="download-button">Download Materials</a>  {# Download button for course materials #}
+        {% else %}
+            <p>No materials uploaded for this course.</p>  {# Message if no materials are uploaded #}
+        {% endif %}
+    </div>
+    <div class="button-container">
+        <a href="{% url 'submit_feedback' course.id %}" class="feedback-button">Submit Feedback</a>  {# Button to submit feedback #}
+    </div>
+</div>
+{% endblock %}  {# End of content block #}
